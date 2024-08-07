@@ -1,13 +1,16 @@
+# my_library/venv_manager.py
 import os
 import shutil
 import subprocess
 import sys
 
 def is_venv():
+    """Verifica se o ambiente virtual está ativado."""
     return (hasattr(sys, 'real_prefix') or 
             (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
 
 def activate_venv(venv_dir):
+    """Ativa o ambiente virtual localizado em `venv_dir`."""
     activate_script = os.path.join(venv_dir, 'venv', 'Scripts', 'activate.bat')
     if os.path.isfile(activate_script):
         subprocess.run([activate_script], shell=True, check=True)
@@ -15,39 +18,35 @@ def activate_venv(venv_dir):
         raise FileNotFoundError(f"Arquivo {activate_script} não encontrado.")
 
 def is_pyinstaller():
+    """Verifica se o PyInstaller está instalado."""
     try:
         result = subprocess.run(
-            [sys.executable, '-m','pip', 'show', 'pyinstaller'],
+            [sys.executable, '-m', 'pip', 'show', 'pyinstaller'],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         return result.returncode == 0
     
     except Exception as e:
-        print(f"Erro ao verificar o pyinstaller: {e}")
-        return False 
+        print(f"Erro ao verificar o PyInstaller: {e}")
+        return False
 
-def main():
+def run_script(script_path, venv_dir=None):
+    """Executa o script Python fornecido com a ativação opcional do ambiente virtual."""
     try:
-        if len(sys.argv) < 2:
-            print("Diretório de trabalho não fornecido.")
-            sys.exit(1)
-
-        working_dir = sys.argv[1]
-        
         # Verifica se está dentro do venv
         venv_activated = False
-        if not is_venv():
+        if venv_dir and not is_venv():
             print("Ativando o ambiente virtual...")
-            activate_venv(working_dir)
+            activate_venv(venv_dir)
             venv_activated = True
         
         if not is_pyinstaller():
-            print("Instalando o pyinstaller...")
-            subprocess.run(['pip','install','pyinstaller'], check=True)
+            print("Instalando o PyInstaller...")
+            subprocess.run(['pip', 'install', 'pyinstaller'], check=True)
 
-        # Executa o comando pyinstaller
-        print("Executando pyinstaller...")
-        subprocess.run(['pyinstaller', '--onefile', 'main.py'], check=True)
+        # Executa o comando PyInstaller
+        print("Executando PyInstaller...")
+        subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
 
         # Caminhos
         dist_dir = 'dist'
@@ -60,7 +59,7 @@ def main():
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
         if os.path.isfile('./main.exe'):
-            print("Removendo o main.exe do diretorio padrão")
+            print("Removendo o main.exe do diretório padrão...")
             os.remove('./main.exe')
         
         # Copia o executável para o diretório principal
@@ -85,7 +84,7 @@ def main():
         print("Script executado com sucesso!")
 
     except subprocess.CalledProcessError as e:
-        print(f"Erro ao executar pyinstaller: {e}")
+        print(f"Erro ao executar PyInstaller: {e}")
     except FileNotFoundError as e:
         print(e)
     except Exception as e:
@@ -93,8 +92,5 @@ def main():
 
     finally:
         if venv_activated:
-            subprocess.run('deactivate')
+            subprocess.run('deactivate', shell=True)
             print("Desativando o ambiente virtual.")
-            
-if __name__ == "__main__":
-    main()

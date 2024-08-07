@@ -1,10 +1,5 @@
 from setuptools import setup, find_packages
 
-def parse_requirements(filename:str) -> list:
-    """Reads the requirements.txt file and returns a list of packages."""
-    with open(filename, 'r') as file:
-        return [line.strip() for line in file.readlines() if line.strip()]
-
 setup(
     name='pyexecute',
     version='0.1',
@@ -15,8 +10,13 @@ setup(
     description='Easy way to create a main.exe',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/Nando2003/db2excel.git',
-    install_requires=parse_requirements('requirements.txt'),
+    url='https://github.com/fernandoluiz2003/pyexecute',
     author='Fernando Fontes',
     author_email='nandofontes30@gmail.com',
+    
+    entry_points={
+        'console_scripts': [
+            'pyexecute=lib.pyexecute.cli:run_script',
+        ],
+    },
 )
