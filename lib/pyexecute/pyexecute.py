@@ -1,4 +1,3 @@
-# my_library/venv_manager.py
 import os
 import shutil
 import subprocess

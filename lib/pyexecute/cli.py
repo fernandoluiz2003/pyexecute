@@ -14,6 +14,7 @@ def main():
         print(f"Script não encontrado: {args.script}")
         return
 
+    # Passa o caminho do script e o caminho do ambiente virtual (se fornecido) para run_script
     run_script(args.script, args.venv)
 
 if __name__ == '__main__':
