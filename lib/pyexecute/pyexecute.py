@@ -65,7 +65,7 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         if os.path.isfile(f'./{script_name}.exe') and overwrite is True:
             print("Removendo o main.exe do diretório padrão...")
             os.remove(f'./{script_name}.exe')
-        else:
+        elif os.path.isfile(f'./{script_name}.exe') and overwrite is False:
             raise FileExistsError("Não foi possível deletar o executavel.")
         
         print(f"Copiando {main_exe} para o diretório principal...")
