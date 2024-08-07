@@ -39,7 +39,6 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         script_name = os.path.splitext(os.path.basename(script_path))[0]
         print(f"Nome do script: {script_name}")
         
-        # Verifica se está dentro do venv
         venv_activated = False
         if venv_dir and not is_venv():
             print("Ativando o ambiente virtual...")
@@ -50,13 +49,9 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             print("Instalando o PyInstaller...")
             subprocess.run(['pip', 'install', 'pyinstaller'], check=True)
 
-        # Executa o comando PyInstaller
         print("Executando PyInstaller...")
         subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
-
-        script_name = os.path.basename(script_path)
         
-        # Caminhos
         dist_dir = 'dist'
         build_dir = 'build'
         spec_file = f'{script_name}.spec'
@@ -64,7 +59,6 @@ def run_script(script_path, venv_dir=None, overwrite=False):
 
         sleep(5) # Espera 5 segundos para continuar
         
-        # Verifica se o executável foi criado
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
@@ -74,21 +68,17 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         else:
             raise FileExistsError("Não foi possível deletar o executavel.")
         
-        # Copia o executável para o diretório principal
         print(f"Copiando {main_exe} para o diretório principal...")
         shutil.copy(main_exe, '.')
 
-        # Remove a pasta build
         if os.path.exists(build_dir):
             print(f"Removendo pasta {build_dir}...")
             shutil.rmtree(build_dir)
 
-        # Remove a pasta dist
         if os.path.exists(dist_dir):
             print(f"Removendo pasta {dist_dir}...")
             shutil.rmtree(dist_dir)
 
-        # Remove o arquivo main.spec
         if os.path.exists(spec_file):
             print(f"Removendo arquivo {spec_file}...")
             os.remove(spec_file)

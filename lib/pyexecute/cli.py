@@ -1,8 +1,6 @@
-# my_library/cli.py
 import argparse
 import os
 from pyexecute import run_script
-import sys
 
 def main():    
     parser = argparse.ArgumentParser(description='Gerencie ambientes virtuais e execute scripts Python com PyInstaller.')
