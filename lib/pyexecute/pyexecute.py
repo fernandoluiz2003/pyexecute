@@ -62,12 +62,12 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
-        if os.path.exists(f'./{script_name}.exe') and overwrite is True:
-            print("Removendo o main.exe do diretório padrão...")
-            os.remove(f'./{script_name}.exe')
-            
-        elif os.path.exists(f'./{script_name}.exe') and overwrite is False:
-            raise FileExistsError("Não foi possível deletar o executavel.")
+        if os.path.exists(f'./{script_name}.exe'):
+            if overwrite is True:
+                print("Removendo o main.exe do diretório padrão...")
+                os.remove(f'./{script_name}.exe')
+            else:
+                raise FileExistsError("Não foi possível deletar o executavel.")
         
         print(f"Copiando {main_exe} para o diretório principal...")
         shutil.copy(main_exe, '.')
