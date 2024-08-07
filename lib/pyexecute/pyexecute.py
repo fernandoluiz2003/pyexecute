@@ -62,29 +62,37 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
-        if os.path.exists(f'./{script_name}.exe'):
-            if overwrite is True:
-                print("Removendo o main.exe do diretório padrão...")
-                os.remove(f'./{script_name}.exe')
-            else:
-                raise FileExistsError("Não foi possível deletar o executavel.")
-        
-        print(f"Copiando {main_exe} para o diretório principal...")
-        shutil.copy(main_exe, '.')
+        try:
+            error = False
+            if os.path.exists(f'./{script_name}.exe'):
+                if overwrite is True:
+                    print("Removendo o main.exe do diretório padrão...")
+                    os.remove(f'./{script_name}.exe')
+                else:
+                    raise FileExistsError("Não foi possível deletar o executavel.")
+            
+            print(f"Copiando {main_exe} para o diretório principal...")
+            shutil.copy(main_exe, '.')
+            
+        except FileExistsError as e:
+            print(f'Ocorreu um erro: {e}')
+            
+        finally:
+            if os.path.exists(build_dir):
+                print(f"Removendo pasta {build_dir}...")
+                shutil.rmtree(build_dir)
 
-        if os.path.exists(build_dir):
-            print(f"Removendo pasta {build_dir}...")
-            shutil.rmtree(build_dir)
+            if os.path.exists(dist_dir):
+                print(f"Removendo pasta {dist_dir}...")
+                shutil.rmtree(dist_dir)
 
-        if os.path.exists(dist_dir):
-            print(f"Removendo pasta {dist_dir}...")
-            shutil.rmtree(dist_dir)
-
-        if os.path.exists(spec_file):
-            print(f"Removendo arquivo {spec_file}...")
-            os.remove(spec_file)
-
-        print("Script executado com sucesso!")
+            if os.path.exists(spec_file):
+                print(f"Removendo arquivo {spec_file}...")
+                os.remove(spec_file)
+            
+        if error is False:
+            print("Script executado com sucesso!")
+            return
 
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar PyInstaller: {e}")
