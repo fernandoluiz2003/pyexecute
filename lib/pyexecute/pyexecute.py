@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import sys
+from time import sleep
 
 def is_venv():
     """Verifica se o ambiente virtual está ativado."""
@@ -29,9 +30,15 @@ def is_pyinstaller():
         print(f"Erro ao verificar o PyInstaller: {e}")
         return False
 
-def run_script(script_path, venv_dir=None):
+def run_script(script_path, venv_dir=None, overwrite=False):
     """Executa o script Python fornecido com a ativação opcional do ambiente virtual."""
     try:
+        if not os.path.isfile(script_path):
+            raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
+        
+        script_name = os.path.splitext(os.path.basename(script_path))[0]
+        print(f"Nome do script: {script_name}")
+        
         # Verifica se está dentro do venv
         venv_activated = False
         if venv_dir and not is_venv():
@@ -47,19 +54,25 @@ def run_script(script_path, venv_dir=None):
         print("Executando PyInstaller...")
         subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
 
+        script_name = os.path.basename(script_path)
+        
         # Caminhos
         dist_dir = 'dist'
         build_dir = 'build'
-        spec_file = 'main.spec'
-        main_exe = os.path.join(dist_dir, 'main.exe')
+        spec_file = f'{script_name}.spec'
+        main_exe = os.path.join(dist_dir, f'{script_name}.exe')
 
+        sleep(5) # Espera 5 segundos para continuar
+        
         # Verifica se o executável foi criado
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
-        if os.path.isfile('./main.exe'):
+        if os.path.isfile(f'./{script_name}.exe') and overwrite is True:
             print("Removendo o main.exe do diretório padrão...")
-            os.remove('./main.exe')
+            os.remove(f'./{script_name}.exe')
+        else:
+            raise FileExistsError("Não foi possível deletar o executavel.")
         
         # Copia o executável para o diretório principal
         print(f"Copiando {main_exe} para o diretório principal...")
