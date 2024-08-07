@@ -76,6 +76,7 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             
         except FileExistsError as e:
             print(f'Ocorreu um erro: {e}')
+            error = True
             
         finally:
             if os.path.exists(build_dir):
