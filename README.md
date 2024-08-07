@@ -1,45 +1,30 @@
-# **DB2EXCEL**
+# **pyexecute**
 
 ## *Description*
 
-`db2excel` is a python package that permits extract data from a **relational database (MySQL, PostgreSQL, SQLite3)** to an **excel file (.xlsx)**.
+`pyexecute` is a python package that facilitates the conversion of python files (`.py`) to executable (`.exe`).
 
 ## *Features*
 
-- Supports multiple databases: **MySQL, PostgreSQL, SQLite**
-- Extracts all tables and their data from the database
-- Creates an Excel workbook with each table as a separate sheet
-- Option to overwrite existing Excel files
+- The package installs the `pyinstaller`
+- Delete unnecessary files and folders
+- You can overwrite your old executables
+- It's only for Windows users
 
 ## *Installation*
 
 ```bash
-pip install git+https://github.com/Nando2003/db2excel.git
+pip install git+https://github.com/fernandoluiz2003/pyexecute.git
 ``` 
 
 ## *Usage*
 
-To use the package, create an instance of the appropriate subclass for your database and specify the required parameters:
+To use the package, you need to have an virtualenv in the directory of your project.
 
-```python
-from db2excel import PostgreSQLToExcel
-
-exporter = PostgreSQLToExcel(
-    database      = 'your_database',
-    username      = 'your_username',
-    password      = 'your_password',
-    host          = 'localhost',
-    port          = '5432',
-    download_path = 'path/to/save',
-    overwrite     = True
-)
+```sh
+pyexecute <script_path> [--venv <venv_path>] [--overwrite]
 ```
 
-- **database (str):** Name of the database to export.
-- **username (str):** Database user name.
-- **password (str):** Database user password.
-- **host (str):** Database host address.
-- **port (str|int) :** Database port address.
-- **download_path (str):** Directory to save the Excel file. If empty or None, saves in the current directory.
-- **excel_name (str):** Name of the Excel file (without extension). Defaults to 'output'.
-- **overwrite (bool):** If True, overwrites the existing file. Defaults to False.
+- **script_path:** The path to the python file.
+- **venv:** ***(optional)*** The venv path is optional.
+- **overwrite:** ***(optional)*** A flag to allow overwriting.
