@@ -6,7 +6,7 @@ def main():
     parser = argparse.ArgumentParser(description='Gerencie ambientes virtuais e execute scripts Python com PyInstaller.')
     parser.add_argument('script', help='Caminho para o script Python a ser executado.')
     parser.add_argument('--venv', help='Caminho para o ambiente virtual.', required=False)
-    parser.add_argument('--overwrite', help='Permite a sobreescrite.', required=False)
+    parser.add_argument('--overwrite',action='store_true', help='Permite a sobrescrite.', required=False)
         
     args = parser.parse_args()
 
