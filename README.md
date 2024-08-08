@@ -55,5 +55,5 @@ The main reason is to simplify the process of managing virtual environments and 
 
 <div align="center">
    <img src="img/gato_maluco.gif"/>
-   <h5> - <b><em>"In short, it's for lazy people like me :)"<h5/>
+   <h5> - <b><em>"ngl it's for lazy people like me :)"<h5/>
 <div/>
