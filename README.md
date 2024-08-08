@@ -47,7 +47,7 @@ pyexecute <script_path> [--venv <venv_path>] [--overwrite]
 - **venv:** ***(optional)*:** The path to the venv folder. If *default*, it will try to find the virtual environment in the directory.
 - **overwrite:** ***(optional)*:** A flag to allow overwriting. If *default:*, overwrite is False.
 
-## *Why do i create this?*
+## *Why did i create this?*
 
 The main reason is to simplify the process of managing virtual environments and running Python scripts, making it a valuable tool for developers who frequently work with different environments and need to generate independent executables.
 
