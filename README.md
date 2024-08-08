@@ -26,5 +26,5 @@ pyexecute <script_path> [--venv <venv_path>] [--overwrite]
 ```
 
 - **script_path:** The path to the python file.
-- **venv:** ***(optional)*** The venv path is optional.
-- **overwrite:** ***(optional)*** A flag to allow overwriting.
+- **venv:** ***(optional)*** The path to the venv folder. If *default*, it will try to find the virtual environment in the directory.
+- **overwrite:** ***(optional)*** A flag to allow overwriting. If *default:*, overwrite is False.
