@@ -29,7 +29,7 @@
    - Provides comprehensive error handling to manage issues such as missing scripts, failed installations, and execution errors.
 
 ## *Installation*
-It is recommended to install in a global environment to ensure that the `pyexecute` command is available system-wide
+It is recommended to install in a global environment to ensure that the `pyexecute` command is available system-wide.
 
 ```sh
 pip install git+https://github.com/fernandoluiz2003/pyexecute.git
