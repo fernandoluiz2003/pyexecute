@@ -13,7 +13,9 @@ setup(
     url='https://github.com/fernandoluiz2003/pyexecute',
     author='Fernando Fontes',
     author_email='nandofontes30@gmail.com',
-    
+    install_requires=[
+        "pyinstaller>=6.9.0",
+    ],
     entry_points={
         'console_scripts': [
             'pyexecute=pyexecute.cli:main',
