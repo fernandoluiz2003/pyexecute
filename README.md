@@ -29,7 +29,7 @@
    - Provides comprehensive error handling to manage issues such as missing scripts, failed installations, and execution errors.
 
 ## *Installation*
-It is recommended to install in a global environment to ensure that the `pyexecute` command is available system-wide
+It is recommended to install in a global environment to ensure that the `pyexecute` command is available system-wide.
 
 ```sh
 pip install git+https://github.com/fernandoluiz2003/pyexecute.git
@@ -47,7 +47,7 @@ pyexecute <script_path> [--venv <venv_path>] [--overwrite]
 - **venv:** ***(optional)*:** The path to the venv folder. If *default*, it will try to find the virtual environment in the directory.
 - **overwrite:** ***(optional)*:** A flag to allow overwriting. If *default:*, overwrite is False.
 
-## *Why do i create this?*
+## *Why did i create this?*
 
 The main reason is to simplify the process of managing virtual environments and running Python scripts, making it a valuable tool for developers who frequently work with different environments and need to generate independent executables.
 
@@ -55,5 +55,5 @@ The main reason is to simplify the process of managing virtual environments and 
 
 <div align="center">
    <img src="img/gato_maluco.gif"/>
-   <h5> - <b><em>"In short, it's for lazy people like me :)"<h5/>
+   <h5> - <b><em>"ngl it's for lazy people like me :)"<h5/>
 <div/>
