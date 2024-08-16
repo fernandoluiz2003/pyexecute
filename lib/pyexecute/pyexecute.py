@@ -43,6 +43,7 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
         
         script_name = os.path.splitext(os.path.basename(script_path))[0]
+        spec_file = f'{script_name}.spec'
         print(f"Nome do script: {script_name}")
         
         venv_activated = False
@@ -58,7 +59,6 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         print("Executando PyInstaller...")
         subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
         
-        spec_file = f'{script_name}.spec'
         main_exe = os.path.join(dist_dir, f'{script_name}.exe')
 
         sleep(5) # Espera 5 segundos para continuar
