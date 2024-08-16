@@ -32,6 +32,12 @@ def is_pyinstaller():
 
 def run_script(script_path, venv_dir=None, overwrite=False):
     """Executa o script Python fornecido com a ativação opcional do ambiente virtual."""
+    
+    dist_dir = 'dist'
+    build_dir = 'build'
+    spec_file = None 
+    error = False
+    
     try:
         if not os.path.isfile(script_path):
             raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
@@ -52,8 +58,6 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         print("Executando PyInstaller...")
         subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
         
-        dist_dir = 'dist'
-        build_dir = 'build'
         spec_file = f'{script_name}.spec'
         main_exe = os.path.join(dist_dir, f'{script_name}.exe')
 
@@ -62,7 +66,6 @@ def run_script(script_path, venv_dir=None, overwrite=False):
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
 
-        error = False
         if os.path.exists(f'./{script_name}.exe'):
             if overwrite is True:
                 print("Removendo o main.exe do diretório padrão...")
