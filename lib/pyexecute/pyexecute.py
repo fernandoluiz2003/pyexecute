@@ -11,7 +11,11 @@ def is_venv():
 
 def activate_venv(venv_dir):
     """Ativa o ambiente virtual localizado em `venv_dir`."""
-    activate_script = os.path.join(venv_dir, 'venv', 'Scripts', 'activate.bat')
+    if venv_dir is None:
+        activate_script = os.path.join('venv', 'Scripts', 'activate.bat')
+    else:
+        activate_script = os.path.join(venv_dir, 'Scripts', 'activate.bat')
+        
     if os.path.isfile(activate_script):
         subprocess.run([activate_script], shell=True, check=True)
     else:
