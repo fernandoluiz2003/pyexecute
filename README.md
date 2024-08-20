@@ -35,6 +35,26 @@ It is recommended to install in a global environment to ensure that the `pyexecu
 pip install git+https://github.com/fernandoluiz2003/pyexecute.git
 ``` 
 
+After the installation, you need to add the `Scripts` directory to the **PATH** to use the commands from any directory.
+
+1. Locate the `Scripts` directory:
+
+```sh
+C:\Users\<YourUsername>\AppData\Local\Packages\PythonSoftwareFoundation.Python.<Version>\LocalCache\local-packages\Python<Version>\Scripts
+```
+
+2. Add to **PATH**:
+
+- Open the Start Menu, search for ***Environment Variables***, and select "Edit the system environment variables".
+
+- In the System Properties window, click on the ***Environment Variables*** button.
+ 
+- Under ***System variables***, scroll down and find the **Path** variable, then select it and click "Edit."
+
+- Click "New" and paste the path to the Scripts directory.
+
+- Click "OK" to close all windows.
+
 ## *Usage*
 
 To use the package, you need to have an virtualenv in the directory of your project.
