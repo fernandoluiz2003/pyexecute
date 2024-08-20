@@ -47,6 +47,9 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
         
         script_name = os.path.splitext(os.path.basename(script_path))[0]
+        print(script_path)
+        print(script_name)
+        
         spec_file = f'{script_name}.spec'
         print(f"Nome do script: {script_name}")
         
