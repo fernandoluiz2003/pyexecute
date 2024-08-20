@@ -9,15 +9,15 @@ def is_venv():
     return (hasattr(sys, 'real_prefix') or 
             (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
 
-def activate_venv(venv_dir):
+def activate_venv(venv_dir=None):
     """Ativa o ambiente virtual localizado em `venv_dir`."""
-    if venv_dir is None:
-        activate_script = os.path.join('venv', 'Scripts', 'activate.bat')
-    else:
-        activate_script = os.path.join(venv_dir, 'Scripts', 'activate.bat')
-        
+    activate_script = os.path.join(venv_dir or 'venv', 'Scripts', 'activate.bat')
     if os.path.isfile(activate_script):
-        subprocess.run([activate_script], shell=True, check=True)
+        result = subprocess.run([activate_script], shell=True, capture_output=True, text=True)
+        print("Saída:", result.stdout)
+        print("Erros:", result.stderr)
+        if result.returncode != 0:
+            raise Exception(f"Falha ao ativar o venv: {result.stderr}")
     else:
         raise FileNotFoundError(f"Arquivo {activate_script} não encontrado.")
 
@@ -47,8 +47,7 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
         
         script_name = os.path.splitext(os.path.basename(script_path))[0]
-        print(script_path)
-        print(script_name)
+        print(is_venv(), activate_venv())
         
         spec_file = f'{script_name}.spec'
         print(f"Nome do script: {script_name}")
@@ -112,9 +111,9 @@ def run_script(script_path, venv_dir=None, overwrite=False):
             print(f"Removendo arquivo {spec_file}...")
             os.remove(spec_file)
         
-        if venv_activated:
+        """if venv_activated:
             subprocess.run('deactivate', shell=True)
-            print("Desativando o ambiente virtual.")
+            print("Desativando o ambiente virtual.")"""
             
     if error is False:
         print("Script executado com sucesso!")
