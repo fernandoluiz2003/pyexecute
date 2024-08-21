@@ -1,4 +1,3 @@
-import logging.config
 import os
 import sys
 import shutil
@@ -72,7 +71,7 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
     interrupted_script = True
     
     try:
-        if executable_name:
+        if executable_name is None:
             script_name = os.path.splitext(
                 os.path.basename(script_path)
             )[0]
@@ -84,7 +83,7 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
         logging.info(f'Nome do script: {script_name}')
         
         venv_activated = False
-        if venv_dir and not is_venv():
+        if not is_venv():
             logging.info('Ativando o ambiente virtual...')
             sleep(5)
             
@@ -93,6 +92,7 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
         
         if not has_pyinstaller():
             logging.info('Instalando pyinstaller...')
+            subprocess.run(['pip', 'install', 'pyinstaller'], check=True)
             sleep(5)
         
         logging.info('Executando pyinstaller...')
