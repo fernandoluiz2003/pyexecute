@@ -1,121 +1,156 @@
+import logging.config
 import os
+import sys
 import shutil
 import subprocess
-import sys
+
 from time import sleep
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
 def is_venv():
-    """Verifica se o ambiente virtual está ativado."""
-    return (hasattr(sys, 'real_prefix') or 
-            (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
-
-def activate_venv(venv_dir=None):
-    """Ativa o ambiente virtual localizado em `venv_dir`."""
-    activate_script = os.path.join(venv_dir or 'venv', 'Scripts', 'activate.bat')
+    """
+    Verifica se o ambiente virtual está ativado.
+    """
+    return (
+        hasattr(sys, 'real_prefix') or
+    (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+    )
+    
+def activate_venv(venv_dir: str = None):
+    """
+    Ativa o ambiente virtual localizado em `venv_dir`
+    """
+    activate_script = os.path.join(
+        venv_dir or 'venv', 'Scripts', 'activate.bat'
+    )
+    
     if os.path.isfile(activate_script):
-        result = subprocess.run([activate_script], shell=True, capture_output=True, text=True)
-        print("Saída:", result.stdout)
-        print("Erros:", result.stderr)
+        result = subprocess.run(
+            [activate_script],
+            shell          = True,
+            capture_output = True
+        )
         if result.returncode != 0:
-            raise Exception(f"Falha ao ativar o venv: {result.stderr}")
+            raise Exception(f'Falha ao ativar o virtualenv: {result.stderr}')
+    
     else:
-        raise FileNotFoundError(f"Arquivo {activate_script} não encontrado.")
+        raise FileNotFoundError(f'Arquivo {activate_script} não encontrado.')
 
-def is_pyinstaller():
-    """Verifica se o PyInstaller está instalado."""
+def has_pyinstaller():
+    """
+    Verifica se o `pyinstaller` está instalado.
+    """
     try:
         result = subprocess.run(
-            [sys.executable, '-m', 'pip', 'show', 'pyinstaller'],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            [
+                sys.executable,
+                '-m', 'pip', 'show', 'pyinstaller'
+            ],
+            stdout= subprocess.PIPE, stderr = subprocess.PIPE
         )
         return result.returncode == 0
     
     except Exception as e:
-        print(f"Erro ao verificar o PyInstaller: {e}")
+        logging.error(f"Erro ao verificar o pyinstaller")
         return False
-
-def run_script(script_path, venv_dir=None, overwrite=False):
-    """Executa o script Python fornecido com a ativação opcional do ambiente virtual."""
     
-    dist_dir = 'dist'
+
+def run_script(script_path: str, executable_name: str = None, venv_dir: str = None, overwrite:bool = False):
+    """
+    Executa o script python fornecido com a ativação opciona do ambiente virtual.
+    """
+    
+    dist_dir  = 'dist'
     build_dir = 'build'
-    spec_file = None 
-    error = False
+    
+    spec_file          = None
+    interrupted_script = True
     
     try:
-        if not os.path.isfile(script_path):
-            raise FileNotFoundError(f"Arquivo {script_path} não encontrado.")
-        
-        script_name = os.path.splitext(os.path.basename(script_path))[0]
-        print(is_venv(), activate_venv())
+        if executable_name:
+            script_name = os.path.splitext(
+                os.path.basename(script_path)
+            )[0]
+            
+        else:
+            script_name = executable_name
         
         spec_file = f'{script_name}.spec'
-        print(f"Nome do script: {script_name}")
+        logging.info(f'Nome do script: {script_name}')
         
         venv_activated = False
         if venv_dir and not is_venv():
-            print("Ativando o ambiente virtual...")
+            logging.info('Ativando o ambiente virtual...')
+            sleep(5)
+            
             activate_venv(venv_dir)
             venv_activated = True
         
-        if not is_pyinstaller():
-            print("Instalando o PyInstaller...")
-            subprocess.run(['pip', 'install', 'pyinstaller'], check=True)
-
-        print("Executando PyInstaller...")
-        subprocess.run(['pyinstaller', '--onefile', script_path], check=True)
+        if not has_pyinstaller():
+            logging.info('Instalando pyinstaller...')
+            sleep(5)
         
-        main_exe = os.path.join(dist_dir, f'{script_name}.exe')
-
-        sleep(5) # Espera 5 segundos para continuar
+        logging.info('Executando pyinstaller...')
+        subprocess.run(
+            ['pyinstaller', '--onefile', script_path], 
+            check = True
+        )
+        
+        main_exe = os.path.join(
+            dist_dir, f'{script_name}.exe'
+        )
+        sleep(5)
         
         if not os.path.exists(main_exe):
-            raise FileNotFoundError(f"Arquivo {main_exe} não encontrado.")
-
+            raise FileNotFoundError(f'Arquivo {main_exe} não encontrado.')
+        
         if os.path.exists(f'./{script_name}.exe'):
             if overwrite is True:
-                print("Removendo o main.exe do diretório padrão...")
+                logging.info('Removendo o main.exe do diretório principal...')
                 os.remove(f'./{script_name}.exe')
             else:
-                raise FileExistsError("Não foi possível deletar o executavel.")
-        
-        print(f"Copiando {main_exe} para o diretório principal...")
+                FileExistsError("Não foi possível deletar o executavel.")
+                
+        logging.info(f'Copiando {main_exe} para o diretorio principal...')
         shutil.copy(main_exe, '.')
-            
+
     except subprocess.CalledProcessError as e:
-        error = True
-        print(f"Erro ao executar PyInstaller: {e}")
-        
+        logging.error(e)
+    
     except FileNotFoundError as e:
-        error = True
-        print(e)
-        
+        logging.error(e)
+    
     except FileExistsError as e:
-        error = True
-        print(e)
+        logging.error(e)
         
     except Exception as e:
-        error = True
-        print(f"Ocorreu um erro: {e}")
-    
+        logging.error(e)
+        
+    else:
+        interrupted_script = False
+        
     finally:
         if os.path.exists(build_dir):
-            print(f"Removendo pasta {build_dir}...")
+            logging.info(f'Removendo pasta {build_dir}...')
             shutil.rmtree(build_dir)
-
-        if os.path.exists(dist_dir):
-            print(f"Removendo pasta {dist_dir}...")
-            shutil.rmtree(dist_dir)
-
+        
         if os.path.exists(spec_file):
-            print(f"Removendo arquivo {spec_file}...")
+            logging.info(f'Removendo pasta {dist_dir}...')
+            shutil.rmtree(dist_dir)
+        
+        if os.path.exists(spec_file):
+            logging.info(f'Removendo arquivo {spec_file}...')
             os.remove(spec_file)
         
-        """if venv_activated:
-            subprocess.run('deactivate', shell=True)
-            print("Desativando o ambiente virtual.")"""
-            
-    if error is False:
-        print("Script executado com sucesso!")
-        return
+        if venv_activated:
+            subprocess.run('deactivate', shell = True)
+            logging.info('Desativando o virtualenv.')
         
+        if interrupted_script is False:
+            logging.info('Script executado com sucesso!')
+            return
