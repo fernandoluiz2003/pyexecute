@@ -15,7 +15,7 @@ def main():
         print(f"Script não encontrado: {args.script}")
         return
     
-    run_script(args.script, args.venv, args.overwrite)
+    run_script(args.script, args.name, args.venv, args.overwrite)
 
 if __name__ == "__main__":
     main()
