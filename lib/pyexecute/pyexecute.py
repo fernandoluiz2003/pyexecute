@@ -46,10 +46,7 @@ def has_pyinstaller():
     """
     try:
         result = subprocess.run(
-            [
-                sys.executable,
-                '-m', 'pip', 'show', 'pyinstaller'
-            ],
+            'pip show pyinstaller',
             stdout= subprocess.PIPE, stderr = subprocess.PIPE,
             text = True, shell = True
         )
