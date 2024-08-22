@@ -96,10 +96,17 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             sleep(5)
         
         logging.info('Executando pyinstaller...')
-        subprocess.run(
-            ['pyinstaller', '--onefile', script_path], 
-            check = True
-        )
+        
+        if executable_name is None:
+            subprocess.run(
+                ['pyinstaller', '--onefile', script_path], 
+                check = True
+            )
+        else:
+            subprocess.run(
+                ['pyinstaller', f'--name {executable_name}','--onefile', script_path], 
+                check = True
+            )
         
         main_exe = os.path.join(
             dist_dir, f'{script_name}.exe'
@@ -139,7 +146,7 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             logging.info(f'Removendo pasta {build_dir}...')
             shutil.rmtree(build_dir)
         
-        if os.path.exists(spec_file):
+        if os.path.exists(dist_dir):
             logging.info(f'Removendo pasta {dist_dir}...')
             shutil.rmtree(dist_dir)
         
