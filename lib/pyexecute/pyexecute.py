@@ -81,10 +81,12 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
         else:
             script_name = executable_name
         
-        if os.path.exists(f'./{script_name}.exe'):
+        print(f'{script_name}.exe', os.path.exists(f'{script_name}.exe'))
+        
+        if os.path.exists(f'{script_name}.exe'):
             if overwrite is True:
                 logging.info(f'Removendo o {script_name}.exe do diretório principal...')
-                os.remove(f'./{script_name}.exe')
+                os.remove(f'{script_name}.exe')
             else:
                 FileExistsError("Não foi possível deletar o executavel.")
         
