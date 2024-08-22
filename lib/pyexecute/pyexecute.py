@@ -50,9 +50,14 @@ def has_pyinstaller():
                 sys.executable,
                 '-m', 'pip', 'show', 'pyinstaller'
             ],
-            stdout= subprocess.PIPE, stderr = subprocess.PIPE
+            stdout= subprocess.PIPE, stderr = subprocess.PIPE,
+            text = True, shell = True
         )
-        return result.returncode == 0
+        
+        if result.stdout:
+            return True
+        
+        return False
     
     except Exception as e:
         logging.error(f"Erro ao verificar o pyinstaller")
@@ -78,6 +83,13 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             
         else:
             script_name = executable_name
+        
+        if os.path.exists(f'./{script_name}.exe'):
+            if overwrite is True:
+                logging.info(f'Removendo o {script_name}.exe do diretório principal...')
+                os.remove(f'./{script_name}.exe')
+            else:
+                FileExistsError("Não foi possível deletar o executavel.")
         
         spec_file = f'{script_name}.spec'
         logging.info(f'Nome do script: {script_name}')
@@ -115,13 +127,6 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
         
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f'Arquivo {main_exe} não encontrado.')
-        
-        if os.path.exists(f'./{script_name}.exe'):
-            if overwrite is True:
-                logging.info('Removendo o main.exe do diretório principal...')
-                os.remove(f'./{script_name}.exe')
-            else:
-                FileExistsError("Não foi possível deletar o executavel.")
                 
         logging.info(f'Copiando {main_exe} para o diretorio principal...')
         shutil.copy(main_exe, '.')
