@@ -104,7 +104,7 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             )
         else:
             subprocess.run(
-                ['pyinstaller', f'--name {executable_name}','--onefile', script_path], 
+                ['pyinstaller', '--name', script_name, '--onefile', script_path], 
                 check = True
             )
         
