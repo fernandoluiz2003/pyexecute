@@ -11,7 +11,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-def is_venv():
+def is_venv() -> bool:
     """
     Verifica se o ambiente virtual está ativado.
     """
@@ -40,7 +40,7 @@ def activate_venv(venv_dir: str = None):
     else:
         raise FileNotFoundError(f'Arquivo {activate_script} não encontrado.')
 
-def has_pyinstaller():
+def has_pyinstaller() -> bool:
     """
     Verifica se o `pyinstaller` está instalado.
     """
@@ -59,8 +59,7 @@ def has_pyinstaller():
     except Exception as e:
         logging.error(f"Erro ao verificar o pyinstaller")
         return False
-    
-
+ 
 def run_script(script_path: str, executable_name: str = None, venv_dir: str = None, overwrite:bool = False):
     """
     Executa o script python fornecido com a ativação opciona do ambiente virtual.
@@ -80,6 +79,16 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             
         else:
             script_name = executable_name
+        
+        script_exe = f'{script_name}.exe'
+        exists = os.path.exists(script_exe)
+        
+        if exists == True:
+            if overwrite == True:
+                logging.info(f'Removendo o {script_exe} do diretório principal...')
+                os.remove(script_exe)
+            else:
+                raise FileExistsError("Não foi possível deletar o executavel.")
         
         spec_file = f'{script_name}.spec'
         logging.info(f'Nome do script: {script_name}')
@@ -111,19 +120,12 @@ def run_script(script_path: str, executable_name: str = None, venv_dir: str = No
             )
         
         main_exe = os.path.join(
-            dist_dir, f'{script_name}.exe'
+            dist_dir, script_exe
         )
         sleep(5)
         
         if not os.path.exists(main_exe):
             raise FileNotFoundError(f'Arquivo {main_exe} não encontrado.')
-        
-        if os.path.exists(f'{script_name}.exe'):
-            if overwrite is True:
-                logging.info(f'Removendo o {script_name}.exe do diretório principal...')
-                os.remove(f'{script_name}.exe')
-            else:
-                FileExistsError("Não foi possível deletar o executavel.")
         
         logging.info(f'Copiando {main_exe} para o diretorio principal...')
         shutil.copy(main_exe, '.')
